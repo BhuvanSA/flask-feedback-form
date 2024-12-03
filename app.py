@@ -2,7 +2,6 @@ import psycopg2
 import os
 from datetime import datetime as dt
 from flask import Flask, render_template, request, session, redirect, url_for, flash
-from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -68,7 +67,12 @@ conn.close()
 
 app = Flask(__name__, template_folder="public/templates", static_folder="public/static")
 app.secret_key = SECRET_KEY
-CORS(app)
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_PROTECTION='strong'
+)
 
 
 @app.route("/", methods=["GET"])
